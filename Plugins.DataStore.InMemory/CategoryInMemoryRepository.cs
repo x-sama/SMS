@@ -26,8 +26,16 @@ public class CategoryInMemoryRepository : ICategoryRepository
     {
         // add the category we get to the fake database list 
         if (Categories.Any(x=> x.Name.Equals(category.Name, StringComparison.OrdinalIgnoreCase))) return;
-        var maxId = Categories.Max(x => x.CategoryId);
-        category.CategoryId = maxId + 1;
+        if (Categories.Any())
+        {
+            var maxId = Categories.Max(x => x.CategoryId);
+            category.CategoryId = maxId + 1;
+        }
+        else
+        {
+            category.CategoryId = 1;
+        }
+       
         Categories.Add(category);
     }
 
@@ -43,5 +51,11 @@ public class CategoryInMemoryRepository : ICategoryRepository
     public Category GetCategoryById(int id)
     {
         return Categories.FirstOrDefault(x => x.CategoryId == id);
+    }
+
+    public void DeleteCategory(int id)
+    {
+        var categoryToDelete = GetCategoryById(id);
+        Categories.Remove(categoryToDelete);
     }
 }

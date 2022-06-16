@@ -8,4 +8,5 @@ public interface ICategoryRepository
     public void AddCategory(Category category);
     public void UpdateCategory(Category category);
     public Category GetCategoryById(int id);
+    public void DeleteCategory(int id);
 }
