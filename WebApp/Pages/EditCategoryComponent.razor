@@ -1,0 +1,56 @@
+@inject NavigationManager NavigationManager
+@inject IEditCategoryUseCse EditCategory
+@inject IGetCategoryByIdUseCase GetCategory
+
+@page "/EditCategory/{id}"
+<h3 class="text-center text-info">Edit Category</h3>
+
+@if (category != null )
+{
+    <EditForm class="form-check-inline" Model="category" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <lable for="name">Name</lable>
+            <InputText id="name" @bind-Value="category.Name" class="form-control"></InputText>
+        </div>       
+        <div class="form-group">
+            <lable for="Description">Description</lable>
+            <InputText id="Description" @bind-Value="category.Description" class="form-control"></InputText>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button  type="button" class="btn btn-danger" @onclick="OnCancel">Cancel</button>
+    </EditForm>
+}
+
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private Category category;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        category = new Category();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        var cat =  GetCategory.Execute(int.Parse(id));
+        this.category = new Category { CategoryId = cat.CategoryId, Description = cat.Description, Name = cat.Name };
+    }
+
+    private void OnValidSubmit()
+    {
+        // when the validation are success 
+        EditCategory.Execute(category);
+        NavigationManager.NavigateTo("categories");
+    }
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("categories");
+    }
+
+}
