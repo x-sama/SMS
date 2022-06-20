@@ -1,0 +1,66 @@
+@page "/addproduct"
+
+<h3>AddProducts</h3>
+@inject NavigationManager NavigationManager
+@inject IAddProductUseCase AddProductUseCase
+@inject IGetCategoryByIdUseCase GetCategoryById
+@inject IViewCategoriesUseCases ViewCategoriesUseCases
+
+<h3 class="text-center text-info">AddCategory</h3>
+
+@if (product != null )
+{
+    <EditForm class="form-check-inline" Model="product" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <lable for="name">Name</lable>
+            <InputText id="name" @bind-Value="product.Name"   class="form-control"></InputText>
+        </div>       
+        <div class="form-group">
+            <lable for="Category">Category</lable>
+            <select id="Category" @bind="product.CategoryId" class="form-select">
+                <option value="0"></option>
+                @foreach (var item in Categories)
+                {
+                    <option value="@item.CategoryId">@item.Name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <lable for="name">Price</lable>
+            <InputNumber id="Price" @bind-Value="product.Price" @bind-Value:format="F2" class="form-control"></InputNumber>
+        </div>  
+        <div class="form-group">
+            <lable for="Quantity">qty</lable>
+            <InputNumber id="Quantity" @bind-Value="product.Quantity" class="form-control"></InputNumber>
+        </div>     
+        
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button  class="btn btn-danger" @onclick="OnCancel">Cancel</button>
+    </EditForm>
+}
+
+
+@code {
+    private Product product;
+    private List<Category> Categories;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        product = new Product();
+        Categories = ViewCategoriesUseCases.Execute().ToList();
+    }
+
+    private void OnValidSubmit()
+    {
+        // when the validation are success 
+        AddProductUseCase.Execute(product);
+        NavigationManager.NavigateTo("products");
+    }
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("products");
+    }
+
+}

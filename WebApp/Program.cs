@@ -15,6 +15,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 // dependency injection for in memory 
 builder.Services.AddScoped<ICategoryRepository , CategoryInMemoryRepository>();
+builder.Services.AddScoped<IProductRepository , ProductInMemoryRepository>();
 
 // dependency injection for the use case and Repository
 builder.Services.AddTransient<IViewCategoriesUseCases, ViewCategoriesUseCases>();
@@ -22,6 +23,8 @@ builder.Services.AddTransient<IAddCategoryUseCase, AddCategoryUseCase>();
 builder.Services.AddTransient<IEditCategoryUseCse, EditCategoryUseCase>();
 builder.Services.AddTransient<IGetCategoryByIdUseCase, GetCategoryByIdUseCase>();
 builder.Services.AddTransient<IDeleteCategoryByIdUseCase, DeleteCategoryByIdUseCase>();
+builder.Services.AddTransient<IViewProductUseCase, ViewProductUseCases>();
+builder.Services.AddTransient<IAddProductUseCase, AddProductUseCase>();
 
 var app = builder.Build();
 
