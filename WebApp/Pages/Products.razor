@@ -13,6 +13,7 @@
             <th>Product Name</th>
             <th>Product Quantity</th>
             <th>Product Price</th>
+            <th>Edit</th>
         </tr>
         </thead>
         <tbody>
@@ -23,6 +24,9 @@
                 <td>@product.Name</td>
                 <td>@product.Quantity</td>
                 <td>@Math.Round(product.Price.Value,2)</td>
+               <td><button type="button" @onclick="@(() =>EditProduct(product))" class="btn btn-link" >Edit</button></td>
+               
+                
             </tr>
         }
         </tbody>
@@ -45,4 +49,10 @@
     {
         NavigationManager.NavigateTo("addproduct");
     }
+
+    private void EditProduct(Product product)
+    {
+         NavigationManager.NavigateTo($"editProduct/{product.ProductId}");
+    }
+
 }

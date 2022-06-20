@@ -42,4 +42,21 @@ public class ProductInMemoryRepository : IProductRepository
        
         Products.Add(product);
     }
+
+    public void UpdateProduct(Product product)
+    {
+       
+        if (GetProductById(product.ProductId) is { } productToUpdate)
+        {
+            productToUpdate.Name = product.Name;
+            productToUpdate.CategoryId = product.CategoryId;
+            productToUpdate.Price = product.Price;
+            productToUpdate.Quantity = product.Quantity;
+        }
+    }
+
+    public Product GetProductById(int id)
+    {
+        return Products.FirstOrDefault(x => x.ProductId == id);
+    }
 }
