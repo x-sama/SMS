@@ -55,6 +55,15 @@ public class ProductInMemoryRepository : IProductRepository
         }
     }
 
+    public void DeleteProduct(int product)
+    {
+        var productToDelete = GetProductById(product);
+        if (productToDelete != null)
+        {
+            Products.Remove(productToDelete);
+        }
+    }
+
     public Product GetProductById(int id)
     {
         return Products.FirstOrDefault(x => x.ProductId == id);
