@@ -1,0 +1,73 @@
+
+@inject IViewProductsByCategoryId _viewProductsByCategoryId
+@inject IViewCategoriesUseCases ViewCategoriesUseCases
+<h3 class="text text-center">SelectProductForSellComponent</h3>
+
+<div class="form-group">
+    <lable for="Category">Category</lable>
+    <select id="Category" @bind="_SelectedCategoryId" class="form-select">
+        <option value="0"></option>
+        @foreach (var item in Categories)
+        {
+            <option value="@item.CategoryId">@item.Name</option>
+        }
+    </select>
+</div>
+
+@if (_productInCategorySelected != null)
+{
+    <table class="table">
+        <thead>
+            <th>Product name</th>
+            <th>Qty Left</th>
+        </thead>
+        <tbody>
+        @foreach (var product in _productInCategorySelected)
+        {
+            <tr @onclick="@(() =>OnSelectProduct(product))" id="productSelection" style="@(product.ProductId == _selectedProductId? "background-color : beige":"")">
+                <td>@product.Name</td>
+                <td>@product.Quantity</td>
+            </tr>
+        }
+        </tbody>
+        
+    </table>
+}
+@code {
+    private IEnumerable<Product> _productInCategorySelected;
+    private int _selectedProductId;
+    private int _selectedCategoryId;
+    [Parameter]
+    public EventCallback<Product> OnProductSelected { get; set; }
+
+    private int _SelectedCategoryId
+    {
+        get => _selectedCategoryId;
+        set
+        {
+            _selectedCategoryId = value;
+            _productInCategorySelected = _viewProductsByCategoryId.Execute(value);// grab all the product related to the category selected
+            OnSelectProduct(null);
+            StateHasChanged();
+            
+        }
+    }
+
+    private Product product;
+    private IEnumerable<Category> Categories;// to display the select dropdown
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _productInCategorySelected = new List<Product>();
+        product = new Product();
+        Categories = ViewCategoriesUseCases.Execute();
+    }
+
+    private void OnSelectProduct(Product product)
+    {
+        OnProductSelected.InvokeAsync(product); // tell every component that has that event that we select an product and pass that product
+        if (product != null)
+            _selectedProductId = product.ProductId;
+    }
+
+}

@@ -26,6 +26,11 @@ public class ProductInMemoryRepository : IProductRepository
         return Products;
     }
 
+    public IEnumerable<Product> GetAllProductsRelatedToCategoryId(int categoryId)
+    {
+        return Products.Where(x => x.CategoryId == categoryId);
+    }
+
     public void AddProduct(Product product)
     {
         // add the product to the list
