@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins.DataStore.InMemory"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{7C9384C7-DF24-4780-83C2-3804F18ACB09}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins.Datastor.SQL", "Plugins.Datastor.SQL\Plugins.Datastor.SQL.csproj", "{EF9143DA-A801-4069-AED4-142BD4BDAA43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{7C9384C7-DF24-4780-83C2-3804F18ACB09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C9384C7-DF24-4780-83C2-3804F18ACB09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C9384C7-DF24-4780-83C2-3804F18ACB09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF9143DA-A801-4069-AED4-142BD4BDAA43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF9143DA-A801-4069-AED4-142BD4BDAA43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF9143DA-A801-4069-AED4-142BD4BDAA43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF9143DA-A801-4069-AED4-142BD4BDAA43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

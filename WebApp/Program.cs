@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
+using Plugins.Datastor.SQL;
 using Plugins.DataStore.InMemory;
 using UseCases;
 using UseCases.DataStorePluginInterfaces;
@@ -13,9 +15,15 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 
+// configuration for the SQL db
+builder.Services.AddDbContext<MarketContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 // dependency injection for in memory 
 builder.Services.AddScoped<ICategoryRepository , CategoryInMemoryRepository>();
 builder.Services.AddScoped<IProductRepository , ProductInMemoryRepository>();
+builder.Services.AddScoped<ITransactionRepository , TransactionInMemoryRepository>();
 
 // dependency injection for the use case and Repository
 builder.Services.AddTransient<IViewCategoriesUseCases, ViewCategoriesUseCases>();
@@ -30,6 +38,9 @@ builder.Services.AddTransient<IGetProductByIdUseCase, GetProductByIdUseCase>();
 builder.Services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
 builder.Services.AddTransient<IViewProductsByCategoryId, ViewProductsByCategoryId>();
 builder.Services.AddTransient<ISellProductUseCase, SellProductUseCase>();
+builder.Services.AddTransient<IRecordTransactionUseCase, RecordTransactionUseCase>();
+builder.Services.AddTransient<IGetTodayTransactionsUseCase, GetTodayTransactionsUseCase>();
+builder.Services.AddTransient<IGetTransactionReportUseCase, GetTransactionReportUseCase>();
 
 var app = builder.Build();
 

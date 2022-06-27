@@ -8,4 +8,7 @@ public class Category
     [Required]
     public string Name { get; set; }
     public string Description { get; set; }
+    
+    //for the ef core 
+    public List<Product> Products { get; set; }
 }

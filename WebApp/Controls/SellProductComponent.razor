@@ -20,6 +20,7 @@
         </div>
         <button type="submit" class="btn btn-primary">sell</button>
     </EditForm>
+    <br/>
     @if (!string.IsNullOrWhiteSpace(errorMessage))
     {
         <div class="alert alert-danger">@errorMessage</div>
@@ -35,6 +36,8 @@
     [Parameter]
     public EventCallback<Product> OnProductSold { get; set; }
 
+    [Parameter]
+    public string cashierName { get; set; }
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -58,15 +61,32 @@
 
     private void SellProduct()
     {
-        var product = GetProductByIdUseCase.Execute(productToSell.ProductId);
-        if (product.Quantity >= productToSell.Quantity)
+        if (string.IsNullOrWhiteSpace(cashierName))
         {
-            OnProductSold.InvokeAsync(productToSell);
+            errorMessage = "the cashier name is empty cannot sell a product!";
+            return;
+            
+        }
+          
+
+        var product = GetProductByIdUseCase.Execute(productToSell.ProductId);
+        if (productToSell.Quantity <= 0)
+        {
+            errorMessage ="the Quantity for sell must be more then 0";
+        }
+        else if (product.Quantity >= productToSell.Quantity) 
+        {
+            
+                OnProductSold.InvokeAsync(productToSell);
             errorMessage = string.Empty;
-            if (productToSell.Quantity != null) SellProductUseCase.Execute(productToSell.ProductId, productToSell.Quantity.Value);
+            if (productToSell.Quantity != null)
+            {
+                SellProductUseCase.Execute(cashierName,productToSell.ProductId, productToSell.Quantity.Value);
+            }
         }
         else
         {
+            
             errorMessage = $"{product.Name} only has {product.Quantity} left";
         }
     }

@@ -14,4 +14,8 @@ public class Product
     public int? Quantity { get; set; }
     [Required]
     public double? Price { get; set; }
+    
+    //for the ef core
+
+    public Category Category { get; set; }
 }

@@ -1,0 +1,97 @@
+@page "/transactions"
+@inject IGetTransactionReportUseCase GetTransactionReportUseCase
+@inject IJSRuntime JsRuntime
+
+<div class="row">
+    <div class="col-2">
+        <label for="cashier">Cashier Name</label>
+        <input type="text" id="cashier" class="form-control" @bind-value="_cashierName">
+    </div>
+    <div class="col-3">
+        <label for="Start Date">Start Date</label>
+        <input type="date" id="Start Date" class="form-control" @bind-value="_startDate">
+    </div>
+    <div class="col-3">
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" class="form-control" @bind-value="_endDate">
+    </div>
+    <div class="col-2">
+        <button class="btn btn-primary form-control" @onclick="LoadTransactions">search</button>
+    </div> 
+    <div class="col-2">
+        <button class="btn btn-primary form-control" @onclick="PrintReport">Print</button>
+    </div>
+</div>
+<br>
+@if (_transactions != null)
+{
+    <div id="printarea">
+        
+    
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Date Time</th>
+            <th>Cashier Name</th>
+            <th>Product Name</th>
+            <th>Qty Before</th>
+            <th>Qty Sold</th>
+            <th>Qty After</th>
+            <th>Price</th>
+            <th>Sold AMT</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var transaction in _transactions)
+        {
+            <tr>
+                <td>@transaction.TimeStamp.ToString("yyyy/MM/dd hh:mm")</td>
+                <td>@transaction.CashierName</td>
+                <td>@transaction.ProductName</td>
+                <td>@transaction.BeforeQty</td>
+                <td>@transaction.SoldQty</td>
+                <td>@(transaction.BeforeQty - transaction.SoldQty)</td>
+                <td style="text-align: right">@(string.Format("{0:c}",transaction.Price))</td>
+                <td style="text-align: right">@(string.Format("{0:c}",transaction.SoldQty * transaction.Price))</td>
+            </tr>
+        }
+        
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="5">&nbsp;</td>
+            <td style="text-align: right">
+                <b>Grand Total :</b>
+            </td>
+            <td style="text-align: right">
+                <b>
+                    @(string.Format("{0:c}", _transactions.Sum(x => x.Price * x.SoldQty)))
+                </b>
+            </td>
+        </tr>
+        </tfoot>
+    </table>
+    </div>
+}
+@code {
+    private string _cashierName;
+    private DateTime _startDate;
+    private DateTime _endDate;
+    private IEnumerable<Transaction> _transactions;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _startDate = DateTime.Today;
+        _endDate = DateTime.Today;
+    }
+
+    private void LoadTransactions()
+    {
+        _transactions = GetTransactionReportUseCase.Execute(_cashierName, _startDate, _endDate);
+    } 
+    private void PrintReport()
+    {
+        JsRuntime.InvokeVoidAsync("print");
+    }
+}
